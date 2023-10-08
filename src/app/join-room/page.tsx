@@ -1,8 +1,10 @@
 "use client";
 import Image from "next/image";
 import React, { useState } from "react";
+import { useRouter } from "next/navigation";
 
 export default function Page() {
+  const router = useRouter();
   const [roomNumber, setRoomNumber] = useState("");
   const [password, setPassword] = useState("");
   const [playerData, setPlayerData] = useState(null); // Initialize player data as null
@@ -157,7 +159,7 @@ export default function Page() {
                 position: "relative",
                 border: "1px solid #ccc",
               }}
-              onClick={handleCancelClick}
+              onClick={() => router.push("/")}
             >
               Cancel
             </button>

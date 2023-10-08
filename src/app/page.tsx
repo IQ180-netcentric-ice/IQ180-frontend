@@ -45,7 +45,8 @@ export default function Home() {
             >
               Create
             </button>
-            <button className="text-white bg-[#FFBB54] w-[70px] border-transparent border-solid border-[1px] rounded-xl hover:transform hover:-translate-y-1 hover:shadow-md">
+            <button className="text-white bg-[#FFBB54] w-[70px] border-transparent border-solid border-[1px] rounded-xl hover:transform hover:-translate-y-1 hover:shadow-md"
+            onClick={() => router.push("/join-room")}>
               Join
             </button>
           </div>
