@@ -5,10 +5,40 @@ import React, { useState } from "react";
 export default function Page() {
   const [roomNumber, setRoomNumber] = useState("");
   const [password, setPassword] = useState("");
-
+  const [playerData, setPlayerData] = useState(null); // Initialize player data as null
   const handleJoinClick = () => {
     // Handle logic for joining the room
     console.log("Joining room:", roomNumber);
+    console.log("pass", password);
+    // Create a WebSocket connection
+    const socket = new WebSocket(`ws://127.0.0.1:8000/ws/game/${roomNumber}/`);
+
+    // Send a join request to the server
+    socket.onopen = () => {
+      socket.send(JSON.stringify({ type: "join" }));
+    };
+
+    // Handle messages from the server
+    socket.onmessage = (event) => {
+      const data = JSON.parse(event.data);
+      if (data.type === "game_data") {
+        // Update player data when a message is received
+        setPlayerData(data.player_data);
+      }
+    };
+
+    // Handle errors or closing the connection
+    socket.onerror = (error) => {
+      console.error("WebSocket error: " + error);
+    };
+
+    socket.onclose = (event) => {
+      if (event.wasClean) {
+        console.log("Connection closed cleanly.");
+      } else {
+        console.error("Connection interrupted. Code: " + event.code);
+      }
+    };
   };
 
   const handleCancelClick = () => {
@@ -56,6 +86,7 @@ export default function Page() {
           >
             Join Room
           </h2>
+
           <input
             style={{
               height: "60px", // Set the height to 60
@@ -64,9 +95,11 @@ export default function Page() {
               padding: "8px", // Optional: Add padding for better appearance
               border: "1px solid #ccc", // Optional: Add a border for better visibility
               fontFamily: "Inter, sans-serif",
-
+              color: "black",
               textAlign: "center",
               fontSize: 32,
+              left: "430px",
+              top: "90px",
             }}
             type="text"
             value={roomNumber}
@@ -85,7 +118,7 @@ export default function Page() {
               padding: "8px", // Optional: Add padding for better appearance
               border: "1px solid #ccc", // Optional: Add a border for better visibility
               fontFamily: "Inter, sans-serif",
-
+              color: "black",
               textAlign: "center",
               fontSize: 32,
             }}
