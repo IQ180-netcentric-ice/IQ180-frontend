@@ -27,7 +27,7 @@ export default function Page() {
         alt="background image"
         className="z-[-1]"
       />
-      <div className="flex flex-row items-center justify-start z-[1] h-[100vh]">
+      <div className="flex flex-row items-center justify-around z-[1] h-[100vh]">
         <div className="m-[25px] p-5 border-solid border-black border-[1px] rounded-lg flex flex-col justify-around items-center bg-[#DCDCDC] w-[400px] h-[500px]">
           <div className="m-[25px] items-center flex flex-col justify-between">
             <label className="m-[5px] p-2 border-solid border-black-[1px] rounded-lg  bg-[#999999]">
