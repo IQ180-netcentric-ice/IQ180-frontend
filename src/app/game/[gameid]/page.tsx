@@ -1,7 +1,12 @@
 "use client";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-export default function Page() {
+import { w3cwebsocket as W3CWebSocket } from "websocket";
+export default function Page({ params }) {
+  const gameid = params.gameid;
+  const client = new W3CWebSocket(
+    "ws://127.0.0.1:8080/ws/game/" + gameid + "/"
+  );
   return (
     <>
       <Image

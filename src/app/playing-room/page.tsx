@@ -1,6 +1,8 @@
 "use client";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
+import ProblemNumberButton from "../components/problem-number-button";
+import CalculatorButton from "../components/calculator-button";
 export default function Page() {
   return (
     <>
@@ -24,52 +26,35 @@ export default function Page() {
             Hello
           </label>
           <div className="flex flex-row items-center justify-around w-[800px] h-[70px] m-[50px]">
-            <button className="w-[80px] h-[80px] bg-[#FFBB54] hover:transform hover:-translate-y-1 hover:shadow-md text-white text-5xl font-semibold rounded-md">
-              1
-            </button>
-            <button className="w-[80px] h-[80px] bg-[#FFBB54] hover:transform hover:-translate-y-1 hover:shadow-md text-white text-5xl font-semibold rounded-md">
-              2
-            </button>
-            <button className="w-[80px] h-[80px] bg-[#FFBB54] hover:transform hover:-translate-y-1 hover:shadow-md text-white text-5xl font-semibold rounded-md">
-              3
-            </button>
-            <button className="w-[80px] h-[80px] bg-[#FFBB54] hover:transform hover:-translate-y-1 hover:shadow-md text-white text-5xl font-semibold rounded-md">
-              4
-            </button>
-            <button className="w-[80px] h-[80px] bg-[#FFBB54] hover:transform hover:-translate-y-1 hover:shadow-md text-white text-5xl font-semibold rounded-md">
-              5
-            </button>
+            <ProblemNumberButton text="1" />
+            <ProblemNumberButton text="2" />
+
+            <ProblemNumberButton text="3" />
+
+            <ProblemNumberButton text="4" />
+
+            <ProblemNumberButton text="5" />
           </div>
           <div className="flex flex-row items-center justify-between w-[600px] h-[100px]">
-            <button className="w-16 h-16 bg-gray-500 hover:bg-gray-600 active:bg-gray-400 text-white text-3xl font-semibold rounded-full">
-              +
-            </button>
-            <button className="w-16 h-16 bg-gray-500 hover:bg-gray-600 active:bg-gray-400 text-white text-3xl font-semibold rounded-full">
-              -
-            </button>
-            <button className="w-16 h-16 bg-gray-500 hover:bg-gray-600 active:bg-gray-400 text-white text-3xl font-semibold rounded-full">
-              ×
-            </button>
-            <button className="w-16 h-16 bg-gray-500 hover:bg-gray-600 active:bg-gray-400 text-white text-3xl font-semibold rounded-full">
-              ÷
-            </button>
-            <button className="w-16 h-16 bg-gray-500 hover:bg-gray-600 active:bg-gray-400 text-white text-3xl font-semibold rounded-full">
-              √
-            </button>
-            <button className="w-16 h-16 bg-gray-500 hover:bg-gray-600 active:bg-gray-400 text-white text-3xl font-semibold rounded-full">
-              !
-            </button>
+            <CalculatorButton text="+" />
+
+            <CalculatorButton text="-" />
+
+            <CalculatorButton text="×" />
+
+            <CalculatorButton text="÷" />
+
+            <CalculatorButton text="√" />
+
+            <CalculatorButton text="!" />
           </div>
           <div className="flex flex-row items-center justify-around w-[600px] h-[100px] m-[10px]">
-            <button className="w-16 h-16 bg-gray-500 hover:bg-gray-600 active:bg-gray-400 text-white text-3xl font-semibold rounded-full">
-              ^
-            </button>
-            <button className="w-16 h-16 bg-gray-500 hover:bg-gray-600 active:bg-gray-400 text-white text-3xl font-semibold rounded-full">
-              (
-            </button>
-            <button className="w-16 h-16 bg-gray-500 hover:bg-gray-600 active:bg-gray-400 text-white text-3xl font-semibold rounded-full">
-              )
-            </button>
+            <CalculatorButton text="^" />
+
+            <CalculatorButton text="(" />
+
+            <CalculatorButton text=")" />
+
             <button className="w-[120px] h-12 bg-gray-500 hover:bg-gray-600 active:bg-gray-400 text-white text-3xl font-semibold rounded-full">
               UNDO
             </button>
