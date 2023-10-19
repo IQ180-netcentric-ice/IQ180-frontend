@@ -1,12 +1,82 @@
 "use client";
+import WelcomeBox from "@/app/components/welcome-box";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { w3cwebsocket as W3CWebSocket } from "websocket";
 export default function Page({ params }) {
   const gameid = params.gameid;
   const client = new W3CWebSocket(
-    "ws://127.0.0.1:8080/ws/game/" + gameid + "/"
+    "ws://127.0.0.1:8000/ws/game/" + gameid + "/"
   );
+  const game_data = {
+    type: "game_data",
+    player_data: {
+      player1: {
+        name: "Men",
+        point: 53333,
+        turn: false,
+      },
+      player2: {
+        name: "Kao",
+        point: 5,
+        turn: true,
+      },
+    },
+  };
+  // WebSocket onopen event handler
+  client.onopen = () => {
+    console.log("WebSocket connection is open.");
+    client.send(JSON.stringify(game_data));
+    // You can send initial messages or perform other actions here
+  };
+  // WebSocket onmessage event handler
+  client.onmessage = (event) => {
+    const data = event.data;
+
+    if (typeof data === "string") {
+      const message = JSON.parse(data);
+
+      if (message.room_group_id) {
+        console.log("Room Group ID:", message.room_group_id);
+      }
+
+      if (message.player_data) {
+        const players = message.player_data;
+        for (const playerKey in players) {
+          if (players.hasOwnProperty(playerKey)) {
+            const player = players[playerKey];
+            console.log(
+              `Player ${playerKey} - Name: ${player.name}, Points: ${player.point}, Turn: ${player.turn}`
+            );
+          }
+        }
+      }
+    } else {
+      console.log("Received non-string data:", data);
+    }
+  };
+
+  // WebSocket onclose event handler
+  client.onclose = (event) => {
+    if (event.wasClean) {
+      console.log(
+        `Connection closed cleanly, code=${event.code}, reason=${event.reason}`
+      );
+    } else {
+      console.error("Connection abruptly closed");
+    }
+    // You can attempt to reconnect or handle the close event as needed
+  };
+
+  // WebSocket onerror event handler
+  client.onerror = (error) => {
+    console.error("WebSocket error:", error);
+    // Handle any errors that occur during the connection
+  };
+  // Function to close the WebSocket connection
+  const closeConnection = () => {
+    client.close();
+  };
   return (
     <>
       <Image
@@ -15,34 +85,7 @@ export default function Page({ params }) {
         alt="background image"
         className="z-[-1]"
       />
-      <div className="flex flex-row items-center justify-center z-[1] h-[100vh]">
-        <div className="m-[25px] p-5 border-solid border-black border-[1px] rounded-lg flex flex-col justify-center items-center bg-[#DCDCDC] w-[800px] h-[500px]">
-          <Image
-            src="/smarter-together.png"
-            width={150}
-            height={150}
-            alt="background image"
-            className="border-solid border-gray-500 m-[25px]"
-          />
-          <label className="text-2xl text-black font-bold">
-            Welcom to IQ180,
-          </label>
-          <label className="text-2xl text-red-500 font-bold">Player1!</label>
-          <div className="m-[10px] flex p-1  w-[750px] h-[250px] rounded-lg">
-            <label className="text-black text-xl">
-              Five given numbers can be used once, try to use any operations to
-              get the answer. Each round you have 2 minutes to solve the
-              question. If both players did not finish on time, a point will be
-              given to the closest answer. If both players were correct, a point
-              will be given to the faster player. Winner have to play first in
-              the next round.
-            </label>
-          </div>
-          <button className="text-white bg-blue-500 h-[100px] w-[200px] border-transparent border-solid border-[1px] rounded-xl hover:transform hover:-translate-y-1 hover:shadow-md">
-            Continue
-          </button>
-        </div>
-      </div>
+      <WelcomeBox text="2" />
     </>
   );
 }
