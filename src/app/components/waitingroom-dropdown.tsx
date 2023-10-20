@@ -7,19 +7,25 @@ import { useState } from "react";
 interface RoomDropdownProps {
   items: number;
   text: string;
+  onOptionChange: (option: string) => void;
 }
 
-export default function SelectVariants({ items, text }: RoomDropdownProps) {
+export default function SelectVariants({
+  items,
+  text,
+  onOptionChange,
+}: RoomDropdownProps) {
   const [option, setOption] = useState("");
 
-  let numberList: number[] = [];
+  let numberList: string[] = [];
 
   for (let i = 0; i < items; i++) {
-    numberList.push(i + 1);
+    numberList.push((i + 1).toString());
   }
 
   const handleChange = (event: SelectChangeEvent) => {
     setOption(event.target.value);
+    onOptionChange(option);
   };
 
   return (
@@ -32,6 +38,7 @@ export default function SelectVariants({ items, text }: RoomDropdownProps) {
           sx={{ m: 1, minWidth: 120 }}
           className="bg-[#999999]"
           size="small"
+          required
         >
           <Select
             labelId="label-option"
@@ -40,11 +47,14 @@ export default function SelectVariants({ items, text }: RoomDropdownProps) {
             onChange={handleChange}
             label="Option"
           >
-            {numberList.map((i, index) => (
-              <MenuItem value={i} key={index}>
-                {i}
-              </MenuItem>
-            ))}
+            {numberList.map((i, index) => {
+              console.log(typeof i);
+              return (
+                <MenuItem value={i} key={index}>
+                  {i}
+                </MenuItem>
+              );
+            })}
           </Select>
         </FormControl>
       </div>
