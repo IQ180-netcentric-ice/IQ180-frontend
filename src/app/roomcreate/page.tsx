@@ -70,7 +70,7 @@ export default function NamePage() {
           <div className="flex flex-row justify-between w-[150px] ml-[360px] mt-[181px]">
             <button
               className="text-white bg-[#CBCBCB] w-[70px] border-black border-solid border-[2px] hover:transform hover:-translate-y-1 hover:shadow-md"
-              onClick={() => router.push("/shared-room")}
+              onClick={() => router.push("/roomcreate/shared-room")}
             >
               Create
             </button>

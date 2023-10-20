@@ -51,7 +51,7 @@ export default function Home() {
                 className="text-white bg-[#FFBB54] w-[70px] border-transparent border-solid border-[1px] rounded-xl hover:transform hover:-translate-y-1 hover:shadow-md"
                 onClick={() => {
                   console.log(userInput);
-                  router.push("/waiting-room");
+                  router.push("/roomcreate");
                 }}
               >
                 Create
