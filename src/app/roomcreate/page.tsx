@@ -2,38 +2,28 @@
 import { useState } from "react";
 import Head from "next/head";
 import Image from "next/image";
-import RoomInput from "../components/waitingroom-input";
-// import RoomDropdown from "../components/waitingroom-dropdown";
 import { useRouter } from "next/navigation";
 import * as React from "react";
 import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import Select, { SelectChangeEvent } from "@mui/material/Select";
+import Link from "next/link";
 
 export default function NamePage() {
-  // useEffect(() => {
-  //   console.log("hi");
-  //   alert("hello world");
-  // }, []);
+  const [rounds, setRounds] = useState("");
+  const [minutes, setMinutes] = useState("");
+  const [roomNo, setRoomNo] = useState<string>();
 
-  // const [noRound, setNoRound] = useState<string>();
-  // const [timePerRound, setTimePerRound] = useState<string>();
+  const handleRoundsChange = (event: SelectChangeEvent) => {
+    setRounds(event.target.value);
+  };
 
-  // const handleNoRoundChange = (options: string) => {
-  //   setNoRound(options);
-  //   alert(noRound);
-  // };
+  const handleMinutesChange = (event: SelectChangeEvent) => {
+    setMinutes(event.target.value);
+  };
 
-  // const handleTimePerRoundChange = (options: string) => {
-  //   setTimePerRound(options);
-  //   alert(timePerRound);
-  // };
-
-  const [option, setOption] = useState("");
-
-  const handleOptionChange = (event: SelectChangeEvent) => {
-    setOption(event.target.value);
-    alert(option);
+  const handleRoomNoChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setRoomNo(event.target.value);
   };
 
   const router = useRouter();
@@ -54,26 +44,37 @@ export default function NamePage() {
             Room Create
           </div>
           <div className="flex flex-col gap-[20px]">
-            <RoomInput text="Room's Name" />
-            <RoomInput text="Room's Password" />
+            <RoomInput text="Room Id" onInputChange={handleRoomNoChange} />
+            {/* <RoomInput
+              text="Room's Password"
+              onInputChange={handleRoomNoChange}
+            /> */}
             <RoomDropdown
-              items={5}
+              items={3}
               text={"# of Rounds"}
-              onOptionChange={handleOptionChange}
+              onOptionChange={handleRoundsChange}
             />
             <RoomDropdown
               items={3}
               text={"Time per round"}
-              onOptionChange={handleOptionChange}
+              onOptionChange={handleMinutesChange}
             />
           </div>
           <div className="flex flex-row justify-between w-[150px] ml-[360px] mt-[181px]">
             <button
               className="text-white bg-[#CBCBCB] w-[70px] border-black border-solid border-[2px] hover:transform hover:-translate-y-1 hover:shadow-md"
-              onClick={() => router.push("/roomcreate/shared-room")}
+              disabled={minutes === "" && rounds === "" && roomNo === ""}
             >
-              Create
+              <Link
+                href={{
+                  pathname: "/roomcreate/shared-room",
+                  query: { rounds, minutes, roomNo },
+                }}
+              >
+                Create
+              </Link>
             </button>
+
             <button
               className="text-white bg-[#CBCBCB] w-[70px] border-black border-solid border-[2px] hover:transform hover:-translate-y-1 hover:shadow-md"
               onClick={() => router.push("/")}
@@ -94,18 +95,11 @@ interface RoomDropdownProps {
 }
 
 function RoomDropdown({ items, text, onOptionChange }: RoomDropdownProps) {
-  // const [option, setOption] = useState("");
-
   let numberList: string[] = [];
 
   for (let i = 0; i < items; i++) {
     numberList.push((i + 1).toString());
   }
-
-  // const handleChange = (event: SelectChangeEvent) => {
-  //   setOption(event.target.value);
-  //   // onOptionChange(option);
-  // };
 
   return (
     <>
@@ -126,7 +120,6 @@ function RoomDropdown({ items, text, onOptionChange }: RoomDropdownProps) {
             label="Option"
           >
             {numberList.map((i, index) => {
-              console.log(typeof i);
               return (
                 <MenuItem value={i} key={index}>
                   {i}
@@ -137,5 +130,29 @@ function RoomDropdown({ items, text, onOptionChange }: RoomDropdownProps) {
         </FormControl>
       </div>
     </>
+  );
+}
+
+interface RoomInputProps {
+  text: string;
+  onInputChange: (option: React.ChangeEvent<HTMLInputElement>) => void;
+}
+
+function RoomInput({ text, onInputChange }: RoomInputProps): JSX.Element {
+  return (
+    <div className="gap-[23px] flex flex-row">
+      <div className="text-[#494949] text-[14px] w-[130px] flex justify-end">
+        {text}
+      </div>
+      <input
+        required
+        type="text"
+        placeholder="6 digits room id"
+        className="bg-[#999999] text-white w-[340px] placeholder:text-white"
+        maxLength={6}
+        minLength={6}
+        onChange={(e) => onInputChange(e)}
+      />
+    </div>
   );
 }
