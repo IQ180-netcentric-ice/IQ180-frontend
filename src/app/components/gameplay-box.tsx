@@ -9,6 +9,10 @@ export default function GamePlayBox({ goal }: GamePlayBoxProps): JSX.Element {
   const [operands, setOperands] = useState<string[]>([]);
   const [usedNumbers, setUsedNumbers] = useState<Set<string>>(new Set());
   const [number1, setNumber1] = useState(["1", true]);
+  const [number2, setNumber2] = useState(["2", true]);
+  const [number3, setNumber3] = useState(["3", true]);
+  const [number4, setNumber4] = useState(["4", true]);
+  const [number5, setNumber5] = useState(["5", true]);
 
   const operandOnchange = (value: string) => {
     setOperands((prevOperands) => [...prevOperands, value]);
@@ -39,6 +43,28 @@ export default function GamePlayBox({ goal }: GamePlayBoxProps): JSX.Element {
       if (lastOperand == number1[0] && number1[1]) {
         setNumber1(["1", false]);
       }
+      if (lastOperand == number2[0] && number2[1]) {
+        setNumber2(["2", false]);
+      }
+      if (lastOperand == number3[0] && number3[1]) {
+        setNumber3(["3", false]);
+      }
+      if (lastOperand == number4[0] && number4[1]) {
+        setNumber4(["4", false]);
+      }
+      if (lastOperand == number5[0] && number5[1]) {
+        setNumber5(["5", false]);
+      }
+    }
+  };
+
+  const handleSubmitClick = () => {
+    try {
+      // Join the operands into a single string and evaluate it using 'eval'
+      const result = eval(operands.join(" "));
+      alert(`Result: ${result}`);
+    } catch (error) {
+      alert("Invalid expression");
     }
   };
 
@@ -67,24 +93,28 @@ export default function GamePlayBox({ goal }: GamePlayBoxProps): JSX.Element {
             text="2"
             onNumberClick={handleNumberClick}
             usedNumber={usedNumbers}
+            usage={number2}
           />
 
           <ProblemNumberButton
             text="3"
             onNumberClick={handleNumberClick}
             usedNumber={usedNumbers}
+            usage={number3}
           />
 
           <ProblemNumberButton
             text="4"
             onNumberClick={handleNumberClick}
             usedNumber={usedNumbers}
+            usage={number4}
           />
 
           <ProblemNumberButton
             text="5"
             onNumberClick={handleNumberClick}
             usedNumber={usedNumbers}
+            usage={number5}
           />
         </div>
         <div className="flex flex-row items-center justify-between w-[600px] h-[100px]">
@@ -107,7 +137,10 @@ export default function GamePlayBox({ goal }: GamePlayBoxProps): JSX.Element {
           >
             UNDO
           </button>
-          <button className="w-[120px] h-12 bg-green-500 hover:bg-green-600 active:bg-gray-400 text-white text-3xl font-semibold rounded-lg">
+          <button
+            className="w-[120px] h-12 bg-green-500 hover:bg-green-600 active:bg-gray-400 text-white text-3xl font-semibold rounded-lg"
+            onClick={handleSubmitClick}
+          >
             SUBMIT
           </button>
         </div>

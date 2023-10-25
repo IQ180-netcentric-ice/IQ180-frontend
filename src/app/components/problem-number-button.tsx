@@ -23,8 +23,10 @@ export default function ProblemNumberButton({
   };
   useEffect(() => {
     console.log("useEffect triggered");
-    if (usage && usage.length > 1 && usage[1]) {
+    console.log(usage, usage[0], usage[1]);
+    if (usage.length > 1 && usage[1]) {
       setIsUse(false);
+      console.log("isuse = false");
     }
   }, [usage]);
 
