@@ -1,7 +1,7 @@
 "use client";
 import Head from "next/head";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useState, useMemo } from "react";
 import { createContext } from "react";
 
@@ -50,7 +50,6 @@ export default function Home() {
               <button
                 className="text-white bg-[#FFBB54] w-[70px] border-transparent border-solid border-[1px] rounded-xl hover:transform hover:-translate-y-1 hover:shadow-md"
                 onClick={() => {
-                  console.log(userInput);
                   router.push("/roomcreate");
                 }}
               >

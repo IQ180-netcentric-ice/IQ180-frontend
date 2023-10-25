@@ -4,12 +4,18 @@ import Image from "next/image";
 interface SharedRoomProps {
   src: string;
   username: string;
+  ready: (n: any) => void;
 }
 
-export default function SharedRoom({ src, username }: SharedRoomProps) {
+export default function SharedRoom({ src, username, ready }: SharedRoomProps) {
   const [isReady, setIsReady] = useState(false);
 
   const handleButtonClick = () => {
+    if (isReady) {
+      ready((n: number) => n - 1);
+    } else {
+      ready((n: number) => n + 1);
+    }
     setIsReady(!isReady);
   };
 
