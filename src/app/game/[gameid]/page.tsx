@@ -1,5 +1,5 @@
 "use client";
-import WelcomeBox from "@/app/components/welcome-box";
+import WelcomeBox from "@/app/components/partial/welcome-box";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { w3cwebsocket as W3CWebSocket } from "websocket";

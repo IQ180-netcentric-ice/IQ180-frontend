@@ -1,7 +1,7 @@
 "use client";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import StandbyBox from "../components/standby-box";
+import StandbyBox from "../components/partial/standby-box";
 export default function Page() {
   return (
     <>

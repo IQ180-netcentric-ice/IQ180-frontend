@@ -1,7 +1,7 @@
 "use client";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import RoundAnnoucementBox from "../components/round-annoucement-box";
+import RoundAnnoucementBox from "../components/partial/round-annoucement-box";
 
 export default function Page() {
   return (

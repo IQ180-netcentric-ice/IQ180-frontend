@@ -1,6 +1,6 @@
 "use client";
 import Image from "next/image";
-import GamePlayBox from "../components/gameplay-box";
+import GamePlayBox from "../components/partial/gameplay-box";
 export default function Page() {
   return (
     <>

@@ -1,7 +1,7 @@
 "use client";
 import Image from "next/image";
-import SharedRoom from "../../components/sharedroom-ready-card";
-import LabelCard from "../../components/sharedroom-rounds";
+import SharedRoom from "../../components/partial/sharedroom-ready-card";
+import LabelCard from "../../components/partial/sharedroom-rounds";
 import { useContext } from "react";
 import { UserNameContext } from "../../page";
 

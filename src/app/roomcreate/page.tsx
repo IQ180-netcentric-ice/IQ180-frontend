@@ -2,7 +2,7 @@
 import { useState } from "react";
 import Head from "next/head";
 import Image from "next/image";
-import RoomInput from "../components/waitingroom-input";
+import RoomInput from "../components/partial/waitingroom-input";
 // import RoomDropdown from "../components/waitingroom-dropdown";
 import { useRouter } from "next/navigation";
 import * as React from "react";
