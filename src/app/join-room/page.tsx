@@ -17,7 +17,9 @@ export default function Page() {
 
     // Send a join request to the server
     socket.onopen = () => {
-      socket.send(JSON.stringify({ type: "join" }));
+      socket.send(
+        JSON.stringify({ type: "join_room", username: "oatyfruity" })
+      );
     };
 
     // Handle messages from the server
