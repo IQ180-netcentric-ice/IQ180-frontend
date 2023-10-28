@@ -1,6 +1,7 @@
 import ProblemNumberButton from "./problem-number-button";
 import CalculatorButton from "./calculator-button";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { router } from "websocket";
 interface GamePlayBoxProps {
   goal: any;
 }
@@ -59,6 +60,11 @@ export default function GamePlayBox({ goal }: GamePlayBoxProps): JSX.Element {
   };
 
   const handleSubmitClick = () => {
+    if (usedNumbers.size !== 5) {
+      alert("Please use all 5 numbers before submitting.");
+      return;
+    }
+
     try {
       // Join the operands into a single string and evaluate it using 'eval'
       const result = eval(operands.join(" "));
@@ -68,6 +74,24 @@ export default function GamePlayBox({ goal }: GamePlayBoxProps): JSX.Element {
     }
   };
 
+  const [timer, setTimer] = useState(10);
+
+  useEffect(() => {
+    // Initialize the timer when the component mounts
+    const interval = setInterval(() => {
+      setTimer((prevTimer) => prevTimer - 1);
+    }, 1000);
+    if (timer === 0) {
+      alert("time is out");
+      //router push here
+    }
+
+    return () => {
+      // Clear the interval when the component unmounts
+      clearInterval(interval);
+    };
+  }, [timer]);
+
   return (
     <div className="flex flex-row items-center justify-center z-[1] h-[100vh]">
       <div className="m-[25px] p-10 border-solid border-black border-[1px] rounded-lg flex flex-col justify-center items-center bg-[#DCDCDC] w-[800px] h-[500px]">
@@ -75,8 +99,8 @@ export default function GamePlayBox({ goal }: GamePlayBoxProps): JSX.Element {
           <label className="border-black border-[1px] bg-[#00CDCD] p-2 text-white text-3xl flex flex-col items-center justify-center rounded-lg w-[180px] h-[60px]">
             goal : {goal}
           </label>
-          <label className="border-black border-[1px] bg-purple-500 p-2 text-white text-3xl flex flex-col items-center justify-center rounded-lg w-[150px] h-[80px]">
-            Timer
+          <label className="countdown border-white border-[1px] bg-gray-800 p-2 text-red-500 text-3xl flex flex-col items-center justify-center rounded-lg w-[150px] h-[80px]">
+            {timer}
           </label>
         </div>
         <label className="text-4xl border-solid border-black border-[1px] bg-[#FFFFFF] text-black flex flex-col items-center justify-center w-[400px] h-[200px] m-[20px]">

@@ -6,43 +6,28 @@ import { useRouter } from "next/navigation";
 export default function Page() {
   const router = useRouter();
   const [roomNumber, setRoomNumber] = useState("");
-  // const [password, setPassword] = useState("");
-  const [playerData, setPlayerData] = useState(null); // Initialize player data as null
+
+  const rooms = [
+    { id: "123", owner: "Alice" },
+    { id: "456", owner: "Bob" },
+    { id: "789", owner: "Charlie" },
+  ];
+
   const handleJoinClick = () => {
     // Handle logic for joining the room
-    console.log("Joining room:", roomNumber);
-    // console.log("pass", password);
-    // Create a WebSocket connection
-    const socket = new WebSocket(`ws://127.0.0.1:8000/ws/game/${roomNumber}/`);
-
-    // Send a join request to the server
-    socket.onopen = () => {
-      socket.send(
-        JSON.stringify({ type: "join_room", username: "oatyfruity" })
-      );
-    };
-
-    // Handle messages from the server
-    socket.onmessage = (event) => {
-      const data = JSON.parse(event.data);
-      if (data.type === "game_data") {
-        // Update player data when a message is received
-        setPlayerData(data.player_data);
-      }
-    };
-
-    // Handle errors or closing the connection
-    socket.onerror = (error) => {
-      console.error("WebSocket error: " + error);
-    };
-
-    socket.onclose = (event) => {
-      if (event.wasClean) {
-        console.log("Connection closed cleanly.");
+    if (!roomNumber.trim()) {
+      alert("Please enter a valid room ID");
+      return;
+    } else {
+      const roomExists = rooms.some((room) => room.id === roomNumber);
+      if (roomExists) {
+        // Room number exists, navigate to the /game/${roomNumber} route
+        router.push(`/game/${roomNumber}`);
       } else {
-        console.error("Connection interrupted. Code: " + event.code);
+        alert("Room not found. Please check the room ID.");
       }
-    };
+      console.log("Joining room:", roomNumber);
+    }
   };
 
   return (
