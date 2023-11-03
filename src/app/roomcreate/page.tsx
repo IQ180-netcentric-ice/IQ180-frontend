@@ -12,7 +12,7 @@ import Link from "next/link";
 export default function NamePage() {
   const [rounds, setRounds] = useState("");
   const [minutes, setMinutes] = useState("");
-  const [roomNo, setRoomNo] = useState<string>();
+  const roomNo = localStorage.getItem("roomId") as string;
 
   const handleRoundsChange = (event: SelectChangeEvent) => {
     setRounds(event.target.value);
@@ -22,9 +22,9 @@ export default function NamePage() {
     setMinutes(event.target.value);
   };
 
-  const handleRoomNoChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setRoomNo(event.target.value);
-  };
+  // const handleRoomNoChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  //   setRoomNo(event.target.value);
+  // };
 
   const router = useRouter();
   return (
@@ -44,7 +44,7 @@ export default function NamePage() {
             Room Create
           </div>
           <div className="flex flex-col gap-[20px]">
-            <RoomInput text="Room Id" onInputChange={handleRoomNoChange} />
+            <RoomInput text="Room Id" roomid={roomNo} />
             {/* <RoomInput
               text="Room's Password"
               onInputChange={handleRoomNoChange}
@@ -64,15 +64,21 @@ export default function NamePage() {
             <button
               className="text-white bg-[#CBCBCB] w-[70px] border-black border-solid border-[2px] hover:transform hover:-translate-y-1 hover:shadow-md"
               disabled={minutes === "" && rounds === "" && roomNo === ""}
+              onClick={() => {
+                localStorage.setItem("minutes", minutes);
+                localStorage.setItem("rounds", rounds);
+                router.push("/roomcreate/shared-room");
+              }}
             >
-              <Link
+              {/* <Link
                 href={{
                   pathname: "/roomcreate/shared-room",
                   query: { rounds, minutes, roomNo },
                 }}
               >
                 Create
-              </Link>
+              </Link> */}
+              Create
             </button>
 
             <button
@@ -135,16 +141,18 @@ function RoomDropdown({ items, text, onOptionChange }: RoomDropdownProps) {
 
 interface RoomInputProps {
   text: string;
-  onInputChange: (option: React.ChangeEvent<HTMLInputElement>) => void;
+  // onInputChange: (option: React.ChangeEvent<HTMLInputElement>) => void;
+  roomid: string;
 }
 
-function RoomInput({ text, onInputChange }: RoomInputProps): JSX.Element {
+function RoomInput({ text, roomid }: RoomInputProps): JSX.Element {
   return (
     <div className="gap-[23px] flex flex-row">
       <div className="text-[#494949] text-[14px] w-[130px] flex justify-end">
         {text}
       </div>
-      <input
+      <div className="bg-[#999999] text-white w-[340px]">{roomid}</div>
+      {/* <input
         required
         type="text"
         placeholder="6 digits room id"
@@ -152,7 +160,7 @@ function RoomInput({ text, onInputChange }: RoomInputProps): JSX.Element {
         maxLength={6}
         minLength={6}
         onChange={(e) => onInputChange(e)}
-      />
+      /> */}
     </div>
   );
 }
