@@ -79,6 +79,16 @@ export default function Page() {
     console.log(numberOfPlayerOnline);
   };
 
+  const handleQuitClick = () => {
+    socket.send(
+      JSON.stringify({
+        type: "quit",
+        username: userName,
+      })
+    );
+    router.push(`/`);
+  };
+
   socket.onmessage = (event) => {
     const data = JSON.parse(event.data);
     if (data.player_status.p1 === true && data.player_status.p2 === false) {
@@ -115,6 +125,12 @@ export default function Page() {
             <LabelCard label="# of Rounds" no={roundNo} />
             <LabelCard label="Time per round" no={timeEachRound} />
           </div>
+          <button
+            className="flex bg-red-500 p-[5px] border-solid border-black border-[1px] rounded-lg w-[150px] justify-center text-3xl hover:transform hover:-translate-y-1 hover:shadow-md"
+            onClick={handleQuitClick}
+          >
+            QUIT
+          </button>
         </div>
         <div className="m-[25px] border-solid border-black border-[1px] rounded-lg flex flex-col justify-center items-center bg-[#DCDCDC] w-[1000px] h-[500px]">
           <div className="flex flex-row justify-center">
