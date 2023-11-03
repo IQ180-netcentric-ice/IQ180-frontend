@@ -15,10 +15,16 @@ export default function ProblemNumberButton({
 }: ProblemNumberButtonProps): JSX.Element {
   const [isUse, setIsUse] = useState(false);
 
+  const playSound = () => {
+    const audio = new Audio("/sounds/sfx/tood.m4a");
+    audio.play();
+  };
+
   const handleButtonClick = () => {
     if (!usedNumber.has(text)) {
       setIsUse(true);
       onNumberClick(text);
+      playSound();
     }
   };
   useEffect(() => {
