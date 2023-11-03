@@ -3,9 +3,6 @@ import Head from "next/head";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
-import { createContext } from "react";
-
-export const UserNameContext = createContext("asd");
 
 export default function Home() {
   const [userInput, setUserInput] = useState("");
