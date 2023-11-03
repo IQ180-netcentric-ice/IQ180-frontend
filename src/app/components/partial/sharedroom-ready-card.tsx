@@ -3,20 +3,24 @@ import Image from "next/image";
 
 interface SharedRoomProps {
   src: string;
-  username: string;
-  ready: (n: any) => void;
+  username: string | null;
+  onClick: (no: number) => void;
+  no: number;
+  condition: boolean;
 }
 
-export default function SharedRoom({ src, username, ready }: SharedRoomProps) {
+export default function SharedRoom({
+  src,
+  username,
+  onClick,
+  no,
+  condition,
+}: SharedRoomProps) {
   const [isReady, setIsReady] = useState(false);
 
   const handleButtonClick = () => {
-    if (isReady) {
-      ready((n: number) => n - 1);
-    } else {
-      ready((n: number) => n + 1);
-    }
-    setIsReady(!isReady);
+    onClick(no);
+    setIsReady(true);
   };
 
   return (
@@ -34,11 +38,11 @@ export default function SharedRoom({ src, username, ready }: SharedRoomProps) {
         </label>
         <button
           className={`px-8 py-4 mt-4 border-black border-solid border-[1px] ${
-            isReady ? "bg-green-500" : "bg-gray-300"
+            condition ? "bg-green-500" : "bg-gray-300"
           } text-black rounded-lg border-solid border-black`}
           onClick={handleButtonClick}
         >
-          {isReady ? "Ready" : "Not Ready"}
+          {condition ? "Ready" : "Not Ready"}
         </button>
       </div>
     </>
