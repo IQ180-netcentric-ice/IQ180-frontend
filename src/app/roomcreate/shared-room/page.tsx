@@ -22,15 +22,14 @@ export default function Page() {
   const [playerOneReady, setplayerOneReady] = useState(false);
   const [playerTwoReady, setplayerTwoReady] = useState(false);
 
-  const socket = new WebSocket(`ws://127.0.0.1:8000/ws/game/testing/`);
+  const socket = new WebSocket(`ws://127.0.0.1:8000/ws/game/${roomId}/`);
 
   useEffect(() => {
     socket.onopen = () => {
       console.log("im open");
       socket.send(
         JSON.stringify({
-          type: "create_room",
-          username: userName,
+          type: "online_status",
         })
       );
     };
@@ -38,14 +37,14 @@ export default function Page() {
     socket.onmessage = (event) => {
       const data = JSON.parse(event.data);
 
-      if (typeof data.number_users === "number") {
+      if (data.type === "player_status") {
         // console.log("data", data);
-        if (data.users.length > 2) {
-          const temporalArray = data.users;
+        if (data.players.length > 2) {
+          const temporalArray = data.players;
           // console.log("temporal array", temporalArray);
           setNumberOfPlayerOnline(temporalArray.slice(0, 2));
         } else {
-          setNumberOfPlayerOnline(data.users);
+          setNumberOfPlayerOnline(data.players);
         }
       }
     };
@@ -113,7 +112,7 @@ export default function Page() {
 
           <div className="flex flex-col">
             <LabelCard label="# of Rounds" no={roundNo} />
-            <LabelCard label="Time per round" no={timeEachRound} />
+            <LabelCard label="Time per round" no={"60 seconds"} />
           </div>
         </div>
         <div className="m-[25px] border-solid border-black border-[1px] rounded-lg flex flex-col justify-center items-center bg-[#DCDCDC] w-[1000px] h-[500px]">
