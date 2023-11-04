@@ -2,16 +2,34 @@
 import Image from "next/image";
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
+import { error } from "console";
 
 export default function Page() {
   const router = useRouter();
   const [roomNumber, setRoomNumber] = useState("");
-  // const existRoomId = localStorage.getItem("roomId")
+  const user = localStorage.getItem("username");
   const handleJoinClick = () => {
-    // if (roomNumber === existRoomId) {
-    //   router.push(`/roomcreate/shared-room/${existRoomId}`);
-    // }
-    router.push(`/roomcreate/shared-room/`);
+    fetch("http://localhost:8000/api/join/", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        room_id: roomNumber,
+        username: user,
+      }),
+    })
+      .then((res) => res.json())
+      .then((res) => {
+        if (res.error == "Room not found") {
+          alert(res.error);
+        } else {
+          localStorage.setItem("rounds", res.numRound);
+          localStorage.setItem("roomId", res.room_id);
+          router.push(`/roomcreate/shared-room/`);
+        }
+      })
+      .catch((err) => alert("Error occurs"));
   };
 
   return (
@@ -41,13 +59,6 @@ export default function Page() {
             placeholder="Room No."
             className="w-[300px] h-[50px] text-black text-center border-solid border-black border-[1px]"
           />
-          {/* <input
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            placeholder="Password"
-            className="w-[300px] h-[50px] text-black text-center border-solid border-black border-[1px]"
-          /> */}
           <div className="flex flex-row justify-around w-[250px]">
             <button
               onClick={handleJoinClick}
