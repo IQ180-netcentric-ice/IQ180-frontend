@@ -1,9 +1,13 @@
 import Image from "next/image";
 interface WelcomeBoxProps {
   seconds: number;
+  user: string;
 }
 
-export default function WelcomeBox({ seconds }: WelcomeBoxProps): JSX.Element {
+export default function WelcomeBox({
+  seconds,
+  user,
+}: WelcomeBoxProps): JSX.Element {
   return (
     <div className="flex flex-row items-center justify-center z-[1] h-[100vh]">
       <div className="m-[25px] p-5 border-solid border-black border-[1px] rounded-lg flex flex-col justify-center items-center bg-[#DCDCDC] w-[800px] h-[500px]">
@@ -31,7 +35,7 @@ export default function WelcomeBox({ seconds }: WelcomeBoxProps): JSX.Element {
         <label className="text-2xl text-black font-bold">
           Welcom to IQ180,
         </label>
-        <label className="text-2xl text-red-500 font-bold">Player1!</label>
+        <label className="text-2xl text-red-500 font-bold">{user}</label>
         <div className="m-[10px] flex p-1  w-[750px] h-[250px] rounded-lg">
           <label className="text-black text-xl">
             Five given numbers can be used once, try to use any operations to

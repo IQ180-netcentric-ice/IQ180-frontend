@@ -8,15 +8,20 @@ export default function WelcomeRoom() {
   const router = useRouter();
   const [timer, setTimer] = useState(10);
   const roomId = localStorage.getItem("roomId") || "587";
+  const username = localStorage.getItem("username") as string;
 
   useEffect(() => {
     const interval = setInterval(() => {
-      setTimer(timer - 1);
+      setTimer((timer) => timer - 1);
     }, 1000);
 
     if (timer === 0) {
       router.push(`/game/${roomId}`);
     }
+
+    return () => {
+      clearInterval(interval);
+    };
   }, [timer]);
 
   return (
@@ -27,7 +32,7 @@ export default function WelcomeRoom() {
         alt="background image"
         className="z-[-1]"
       />
-      <WelcomeBox seconds={timer} />
+      <WelcomeBox seconds={timer} user={username} />
     </>
   );
 }

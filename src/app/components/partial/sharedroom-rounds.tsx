@@ -1,6 +1,6 @@
 interface LabelCardProps {
   label: string;
-  no: number;
+  no: number | string;
 }
 
 export default function LabelCard({ label, no }: LabelCardProps) {

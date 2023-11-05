@@ -7,16 +7,7 @@ import Support from "./components/support";
 
 export default function Home() {
   const [userInput, setUserInput] = useState("");
-  const [roomId, setRoomId] = useState("");
   const router = useRouter();
-
-  useEffect(() => {
-    fetch("http://localhost:8000/api/roomid/", { method: "GET" })
-      .then((res) => res.json())
-      .then((res) => {
-        setRoomId(res.room_id);
-      });
-  }, []);
 
   return (
     <>
@@ -56,7 +47,6 @@ export default function Home() {
               className="text-white bg-[#FFBB54] w-[70px] border-transparent border-solid border-[1px] rounded-xl hover:transform hover:-translate-y-1 hover:shadow-md"
               onClick={() => {
                 localStorage.setItem("username", userInput);
-                localStorage.setItem("roomId", roomId);
                 router.push("/roomcreate");
               }}
               disabled={userInput == ""}

@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Head from "next/head";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
@@ -7,26 +7,23 @@ import * as React from "react";
 import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import Select, { SelectChangeEvent } from "@mui/material/Select";
-import Link from "next/link";
 
 export default function NamePage() {
   const [rounds, setRounds] = useState("");
   const [minutes, setMinutes] = useState("");
-  const roomNo = localStorage.getItem("roomId") as string;
+  const [roomId, setRoomId] = useState("");
+  const name = localStorage.getItem("username") as string;
 
   const handleRoundsChange = (event: SelectChangeEvent) => {
     setRounds(event.target.value);
   };
 
-  const handleMinutesChange = (event: SelectChangeEvent) => {
-    setMinutes(event.target.value);
-  };
-
-  // const handleRoomNoChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-  //   setRoomNo(event.target.value);
+  // const handleMinutesChange = (event: SelectChangeEvent) => {
+  //   setMinutes(event.target.value);
   // };
 
   const router = useRouter();
+
   return (
     <>
       <Head>
@@ -44,28 +41,40 @@ export default function NamePage() {
             Room Create
           </div>
           <div className="flex flex-col gap-[20px]">
-            <RoomInput text="Room Id" roomid={roomNo} />
-            {/* <RoomInput
-              text="Room's Password"
-              onInputChange={handleRoomNoChange}
-            /> */}
+            {/* <RoomInput text="Room Id" roomid={roomId} /> */}
             <RoomDropdown
               items={3}
               text={"# of Rounds"}
               onOptionChange={handleRoundsChange}
             />
-            <RoomDropdown
+            {/* <RoomDropdown
               items={3}
               text={"Time per round"}
               onOptionChange={handleMinutesChange}
-            />
+            /> */}
           </div>
           <div className="flex flex-row justify-between w-[150px] ml-[360px] mt-[181px]">
             <button
               className="text-white bg-[#CBCBCB] w-[70px] border-black border-solid border-[2px] hover:transform hover:-translate-y-1 hover:shadow-md"
-              disabled={minutes === "" && rounds === "" && roomNo === ""}
+              disabled={rounds === "" && roomId === ""}
               onClick={() => {
-                localStorage.setItem("minutes", minutes);
+                // localStorage.setItem("minutes", minutes);
+                fetch("http://localhost:8000/api/create/", {
+                  method: "POST",
+                  headers: {
+                    "Content-Type": "application/json",
+                  },
+                  body: JSON.stringify({
+                    username: name,
+                    time: 60,
+                    numRound: Number(rounds),
+                  }),
+                })
+                  .then((res) => res.json())
+                  .then((res) => {
+                    setRoomId(res.room_id);
+                    localStorage.setItem("roomId", res.room_id);
+                  });
                 localStorage.setItem("rounds", rounds);
                 router.push("/roomcreate/shared-room");
               }}
