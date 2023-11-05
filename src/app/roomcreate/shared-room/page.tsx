@@ -10,7 +10,6 @@ export default function Page() {
 
   const roomId = localStorage.getItem("roomId");
   const roundNo = Number(localStorage.getItem("rounds"));
-  const timeEachRound = Number(localStorage.getItem("minutes"));
   const userName = localStorage.getItem("username");
 
   const [numberOfPlayerOnline, setNumberOfPlayerOnline] = useState<any[]>(
@@ -26,7 +25,6 @@ export default function Page() {
 
   useEffect(() => {
     socket.onopen = () => {
-      console.log("im open");
       socket.send(
         JSON.stringify({
           type: "online_status",
