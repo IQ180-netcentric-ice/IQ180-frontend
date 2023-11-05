@@ -3,6 +3,7 @@ import Head from "next/head";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
+import Support from "./components/support";
 
 export default function Home() {
   const [userInput, setUserInput] = useState("");
@@ -19,6 +20,7 @@ export default function Home() {
 
   return (
     <>
+      <Support />
       <Head>
         <title>IQ 180</title>
       </Head>
