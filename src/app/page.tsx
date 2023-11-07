@@ -4,11 +4,13 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
 import Support from "./components/support";
+import Review from "./components/review";
 
 export default function Home() {
   const [userInput, setUserInput] = useState("");
   const [roomId, setRoomId] = useState("");
   const router = useRouter();
+  const [showReview, setShowReview] = useState(false);
 
   useEffect(() => {
     fetch("http://localhost:8000/api/roomid/", { method: "GET" })
@@ -21,6 +23,13 @@ export default function Home() {
   return (
     <>
       <Support />
+      <div className="flex flex-row">
+        <button onClick={() => setShowReview(true)}>
+          <div className="underline text-[#B6AF1A] m-3">Review our game</div>
+        </button>
+        <Review showReview={showReview} setShowReview={setShowReview} />
+      </div>
+
       <Head>
         <title>IQ 180</title>
       </Head>
