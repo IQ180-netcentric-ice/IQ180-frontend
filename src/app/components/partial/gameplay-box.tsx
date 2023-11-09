@@ -7,6 +7,7 @@ interface GamePlayBoxProps {
   time: number;
   prob: number[];
   submit: (solution: number, userResult: number) => void;
+  check: () => void;
 }
 
 export default function GamePlayBox({
@@ -14,6 +15,7 @@ export default function GamePlayBox({
   time,
   prob,
   submit,
+  check,
 }: GamePlayBoxProps): JSX.Element {
   const [operands, setOperands] = useState<string[]>([]);
   const [usedNumbers, setUsedNumbers] = useState<Set<string>>(new Set());
@@ -118,29 +120,34 @@ export default function GamePlayBox({
             onNumberClick={handleNumberClick}
             usedNumber={usedNumbers}
             usage={number1}
+            text={prob[0].toString()}
           />
           <ProblemNumberButton
             onNumberClick={handleNumberClick}
             usedNumber={usedNumbers}
             usage={number2}
+            text={prob[1].toString()}
           />
 
           <ProblemNumberButton
             onNumberClick={handleNumberClick}
             usedNumber={usedNumbers}
             usage={number3}
+            text={prob[2].toString()}
           />
 
           <ProblemNumberButton
             onNumberClick={handleNumberClick}
             usedNumber={usedNumbers}
             usage={number4}
+            text={prob[3].toString()}
           />
 
           <ProblemNumberButton
             onNumberClick={handleNumberClick}
             usedNumber={usedNumbers}
             usage={number5}
+            text={prob[4].toString()}
           />
         </div>
         <div className="flex flex-row items-center justify-between w-[600px] h-[100px]">
@@ -168,6 +175,12 @@ export default function GamePlayBox({
             onClick={handleSubmitClick}
           >
             SUBMIT
+          </button>
+          <button
+            className="w-[120px] h-12 bg-green-500 hover:bg-green-600 active:bg-gray-400 text-white text-3xl font-semibold rounded-lg"
+            onClick={() => check()}
+          >
+            CHECK
           </button>
         </div>
       </div>

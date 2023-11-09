@@ -7,6 +7,7 @@ interface GamePlayRoomProps {
   prob: number[];
   sol: number;
   submit: (solution: number, userResult: number) => void;
+  check: () => void;
 }
 
 export default function PlayRoom({
@@ -14,6 +15,7 @@ export default function PlayRoom({
   prob,
   sol,
   submit,
+  check,
 }: GamePlayRoomProps) {
   return (
     <>
@@ -23,7 +25,13 @@ export default function PlayRoom({
         alt="background image"
         className="z-[-1]"
       />
-      <GamePlayBox goal={sol} time={timer} prob={prob} submit={submit} />
+      <GamePlayBox
+        goal={sol}
+        time={timer}
+        prob={prob}
+        submit={submit}
+        check={check}
+      />
     </>
   );
 }
