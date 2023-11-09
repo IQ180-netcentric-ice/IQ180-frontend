@@ -3,36 +3,58 @@ import CalculatorButton from "./calculator-button";
 import { useState, useEffect } from "react";
 import { router } from "websocket";
 interface GamePlayBoxProps {
-  goal: any;
+  goal: number;
+  time: number;
+  prob: number[];
+  submit: (solution: number, userResult: number) => void;
 }
 
-export default function GamePlayBox({ goal }: GamePlayBoxProps): JSX.Element {
+export default function GamePlayBox({
+  goal,
+  time,
+  prob,
+  submit,
+}: GamePlayBoxProps): JSX.Element {
   const [operands, setOperands] = useState<string[]>([]);
   const [usedNumbers, setUsedNumbers] = useState<Set<string>>(new Set());
-  const [number1, setNumber1] = useState(["1", true]);
-  const [number2, setNumber2] = useState(["2", true]);
-  const [number3, setNumber3] = useState(["3", true]);
-  const [number4, setNumber4] = useState(["4", true]);
-  const [number5, setNumber5] = useState(["5", true]);
+  const [number1, setNumber1] = useState([prob[0].toString(), true]); //prob[0]?.toString()
+  const [number2, setNumber2] = useState([prob[1].toString(), true]);
+  const [number3, setNumber3] = useState([prob[2].toString(), true]);
+  const [number4, setNumber4] = useState([prob[3].toString(), true]);
+  const [number5, setNumber5] = useState([prob[4].toString(), true]);
 
   const operandOnchange = (value: string) => {
     setOperands((prevOperands) => [...prevOperands, value]);
   };
-  const handleNumberClick = (text: string) => {
-    if (!usedNumbers.has(text)) {
-      usedNumbers.add(text);
+  const handleNumberClick = (text: string | boolean) => {
+    if (!usedNumbers.has(text as string)) {
+      usedNumbers.add(text as string);
       setUsedNumbers(new Set(usedNumbers));
-      operandOnchange(text);
+      operandOnchange(text as string);
+
+      if (text == number1[0]) {
+        setNumber1([text, false]);
+      }
+      if (text == number2[0]) {
+        setNumber2([text, false]);
+      }
+      if (text == number3[0]) {
+        setNumber3([text, false]);
+      }
+      if (text == number4[0]) {
+        setNumber4([text, false]);
+      }
+      if (text == number5[0]) {
+        setNumber5([text, false]);
+      }
     }
   };
   const handleUndoClick = () => {
     if (operands.length > 0) {
       const updatedOperands = [...operands];
-      const lastOperand = updatedOperands.pop();
+      const lastOperand = updatedOperands.pop() as string;
 
       setOperands(updatedOperands);
-      console.log(usedNumbers);
-      console.log(operands);
 
       if (usedNumbers.has(lastOperand)) {
         setUsedNumbers((prevUsedNumbers) => {
@@ -41,56 +63,41 @@ export default function GamePlayBox({ goal }: GamePlayBoxProps): JSX.Element {
           return updatedUsedNumbers;
         });
       }
-      if (lastOperand == number1[0] && number1[1]) {
-        setNumber1(["1", false]);
+      if (lastOperand == number1[0]) {
+        setNumber1([number1[0], true]);
       }
-      if (lastOperand == number2[0] && number2[1]) {
-        setNumber2(["2", false]);
+      if (lastOperand == number2[0]) {
+        setNumber2([number2[0], true]);
       }
-      if (lastOperand == number3[0] && number3[1]) {
-        setNumber3(["3", false]);
+      if (lastOperand == number3[0]) {
+        setNumber3([number3[0], true]);
       }
-      if (lastOperand == number4[0] && number4[1]) {
-        setNumber4(["4", false]);
+      if (lastOperand == number4[0]) {
+        setNumber4([number4[0], true]);
       }
-      if (lastOperand == number5[0] && number5[1]) {
-        setNumber5(["5", false]);
+      if (lastOperand == number5[0]) {
+        setNumber5([number5[0], true]);
       }
     }
   };
 
   const handleSubmitClick = () => {
     if (usedNumbers.size !== 5) {
-      alert("Please use all 5 numbers before submitting.");
-      return;
-    }
-
-    try {
-      // Join the operands into a single string and evaluate it using 'eval'
+      console.log(prob);
+    } else {
       const result = eval(operands.join(" "));
-      alert(`Result: ${result}`);
-    } catch (error) {
-      alert("Invalid expression");
+      submit(goal, result);
     }
   };
 
-  const [timer, setTimer] = useState(10);
-
-  useEffect(() => {
-    // Initialize the timer when the component mounts
-    const interval = setInterval(() => {
-      setTimer((prevTimer) => prevTimer - 1);
-    }, 1000);
-    if (timer === 0) {
-      alert("time is out");
-      //router push here
-    }
-
-    return () => {
-      // Clear the interval when the component unmounts
-      clearInterval(interval);
-    };
-  }, [timer]);
+  // useEffect(() => {
+  //   console.log("Change from default");
+  //   setNumber1([prob[0].toString(), true]);
+  //   setNumber2([prob[1].toString(), true]);
+  //   setNumber3([prob[2].toString(), true]);
+  //   setNumber4([prob[3].toString(), true]);
+  //   setNumber5([prob[4].toString(), true]);
+  // }, [time]);
 
   return (
     <div className="flex flex-row items-center justify-center z-[1] h-[100vh]">
@@ -100,7 +107,7 @@ export default function GamePlayBox({ goal }: GamePlayBoxProps): JSX.Element {
             goal : {goal}
           </label>
           <label className="countdown border-white border-[1px] bg-gray-800 p-2 text-red-500 text-3xl flex flex-col items-center justify-center rounded-lg w-[150px] h-[80px]">
-            {timer}
+            {time}
           </label>
         </div>
         <label className="text-4xl border-solid border-black border-[1px] bg-[#FFFFFF] text-black flex flex-col items-center justify-center w-[400px] h-[200px] m-[20px]">
@@ -108,34 +115,29 @@ export default function GamePlayBox({ goal }: GamePlayBoxProps): JSX.Element {
         </label>
         <div className="flex flex-row items-center justify-around w-[800px] h-[70px] m-[50px]">
           <ProblemNumberButton
-            text="1"
             onNumberClick={handleNumberClick}
             usedNumber={usedNumbers}
             usage={number1}
           />
           <ProblemNumberButton
-            text="2"
             onNumberClick={handleNumberClick}
             usedNumber={usedNumbers}
             usage={number2}
           />
 
           <ProblemNumberButton
-            text="3"
             onNumberClick={handleNumberClick}
             usedNumber={usedNumbers}
             usage={number3}
           />
 
           <ProblemNumberButton
-            text="4"
             onNumberClick={handleNumberClick}
             usedNumber={usedNumbers}
             usage={number4}
           />
 
           <ProblemNumberButton
-            text="5"
             onNumberClick={handleNumberClick}
             usedNumber={usedNumbers}
             usage={number5}

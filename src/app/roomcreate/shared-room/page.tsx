@@ -10,7 +10,6 @@ export default function Page() {
 
   const roomId = localStorage.getItem("roomId");
   const roundNo = Number(localStorage.getItem("rounds"));
-  const userName = localStorage.getItem("username");
 
   const [numberOfPlayerOnline, setNumberOfPlayerOnline] = useState<any[]>(
     []
@@ -73,7 +72,6 @@ export default function Page() {
         })
       );
     }
-    console.log(numberOfPlayerOnline);
   };
 
   const handleQuitClick = () => {
@@ -98,7 +96,17 @@ export default function Page() {
     }
   };
 
+  // socket.onclose = (event) => {
+  //   if (event.wasClean) {
+  //     console.log(`Connection closed cleanly`);
+  //   } else {
+  //     console.error("Connection abruptly closed");
+  //   }
+  //   // You can attempt to reconnect or handle the close event as needed
+  // };
+
   if (playerOneReady && playerTwoReady) {
+    socket.close();
     router.push("/roomcreate/shared-room/welcome");
   }
 
@@ -170,27 +178,6 @@ export default function Page() {
                 height={250}
               />
             )}
-            {/* {numberOfPlayerOnline && numberOfPlayerOnline.length === 2 ? (
-              <>
-                {numberOfPlayerOnline.map((i) => (
-                  <SharedRoom
-                    key={i.username} // Make sure to include a unique key for each item in the map
-                    src="/joker.svg"
-                    username={i.username}
-                    ready={setPlayerReady}
-                    onClick={handleReadyClick}
-                    onlinePlayer={i.username ?? "joker"}
-                  />
-                ))}
-              </>
-            ) : (
-              <Image
-                src="/loading.svg"
-                alt="loading"
-                width={250}
-                height={250}
-              />
-            )} */}
           </div>
         </div>
       </div>

@@ -3,7 +3,12 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import StandbyBox from "../partial/standby-box";
 
-export default function StandbyRoom() {
+interface StandbyRoomProps {
+  username: string;
+  timer: number;
+}
+
+export default function StandbyRoom({ username, timer }: StandbyRoomProps) {
   return (
     <>
       <Image
@@ -12,7 +17,7 @@ export default function StandbyRoom() {
         alt="background image"
         className="z-[-1]"
       />
-      <StandbyBox text="1" />
+      <StandbyBox user={username} time={timer} />
     </>
   );
 }

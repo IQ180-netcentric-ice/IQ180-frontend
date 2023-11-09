@@ -1,19 +1,17 @@
 import { useState, useEffect } from "react";
 
 interface ProblemNumberButtonProps {
-  text: string;
-  onNumberClick: (text: string) => void;
+  onNumberClick: (text: string | boolean) => void;
   usedNumber: Set<string>;
   usage: (string | boolean)[];
 }
 
 export default function ProblemNumberButton({
-  text,
   onNumberClick,
   usedNumber,
   usage,
 }: ProblemNumberButtonProps): JSX.Element {
-  const [isUse, setIsUse] = useState(false);
+  // const [isUse, setIsUse] = useState(false);
 
   const playSound = () => {
     const audio = new Audio("/sounds/sfx/tood.m4a");
@@ -21,29 +19,26 @@ export default function ProblemNumberButton({
   };
 
   const handleButtonClick = () => {
-    if (!usedNumber.has(text)) {
-      setIsUse(true);
-      onNumberClick(text);
-      playSound();
+    if (!usedNumber.has(usage[0] as string)) {
+      // setIsUse(true);
+      onNumberClick(usage[0]);
     }
   };
-  useEffect(() => {
-    console.log("useEffect triggered");
-    console.log(usage, usage[0], usage[1]);
-    if (usage.length > 1 && usage[1]) {
-      setIsUse(false);
-      console.log("isuse = false");
-    }
-  }, [usage]);
+
+  // useEffect(() => {
+  //   if (usage.length > 1 && usage[1]) {
+  //     setIsUse(false);
+  //   }
+  // }, [usage]);
 
   return (
     <button
       className={`w-[80px] h-[80px] ${
-        isUse ? "bg-gray-500" : "bg-[#FFBB54]"
+        usage[1] ? "bg-[#FFBB54]" : "bg-gray-500"
       }  hover:transform hover:-translate-y-1 hover:shadow-md text-white text-5xl font-semibold rounded-md`}
       onClick={handleButtonClick}
     >
-      {text}
+      {usage[0]}
     </button>
   );
 }

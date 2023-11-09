@@ -2,10 +2,14 @@ import Image from "next/image";
 import { useEffect, useState } from "react";
 
 interface StandbyBoxProps {
-  text: string;
+  user: string;
+  time: number;
 }
 
-export default function StandbyBox({ text }: StandbyBoxProps): JSX.Element {
+export default function StandbyBox({
+  user,
+  time,
+}: StandbyBoxProps): JSX.Element {
   const tipsAndTricks = [
     "Tip: Try to use all the available numbers to achieve the goal.",
     "Tip: Use parentheses to control the order of operations.",
@@ -27,6 +31,11 @@ export default function StandbyBox({ text }: StandbyBoxProps): JSX.Element {
   return (
     <div className="flex flex-row items-center justify-center z-[1] h-[100vh]">
       <div className="m-[25px] p-5 border-solid border-black border-[1px] rounded-lg flex flex-col justify-center items-center bg-[#DCDCDC] w-[800px] h-[500px]">
+        <div className="flex flex-row justify-end">
+          <label className="countdown border-white border-[1px] bg-gray-800 p-2 text-red-500 text-3xl flex flex-col items-center justify-center rounded-lg w-[150px] h-[80px]">
+            {time}
+          </label>
+        </div>
         <Image
           src="/smarter-together.png"
           width={150}
