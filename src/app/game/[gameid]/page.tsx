@@ -6,6 +6,8 @@ import { useState, useEffect } from "react";
 import { useImmer } from "use-immer";
 import PlayRoom from "@/app/components/multiple/play-room";
 import StandbyRoom from "@/app/components/multiple/standby-room";
+import AnswerSubmitModal from "@/app/components/partial/answer-submit-modal";
+import PlayerScoreBox from "@/app/components/partial/player-score-box";
 
 export default function Page() {
   const router = useRouter();
@@ -17,6 +19,8 @@ export default function Page() {
   const [timer, setTimer] = useState(20);
   const [halfRound, setHalfRound] = useState(1);
   const [roundCount, setRoundCount] = useState(roundNo);
+  const [showModal, setShowModal] = useState(false);
+  const [isCorrect, setIsCorrect] = useState("");
 
   const [numberOfPlayerOnline, setNumberOfPlayerOnline] = useState<any[]>(
     []
@@ -102,6 +106,7 @@ export default function Page() {
     }, 1000);
 
     if (timer === 0) {
+      setShowModal(false);
       if (halfRound == 2) {
         setRoundCount((round) => round - 1);
         setHalfRound(1);
@@ -163,6 +168,8 @@ export default function Page() {
   const handleSubmitClick = (solution: number, userResult: number) => {
     // check player ready status
     if (userResult == solution) {
+      setIsCorrect("CORRECT !!!");
+      setShowModal(true);
       if (username == numberOfPlayerOnline[0]) {
         setRoundScore({
           playerOne: { timer: 60 - timer, answer: userResult },
@@ -176,6 +183,9 @@ export default function Page() {
         });
         console.log("2", roundScore);
       }
+    } else {
+      setShowModal(true);
+      setIsCorrect("WRONG !!!");
     }
   };
 
@@ -217,12 +227,28 @@ export default function Page() {
         problem.data !== null &&
         equation &&
         answer && (
-          <PlayRoom
-            timer={timer}
-            prob={equation}
-            sol={answer}
-            submit={handleSubmitClick}
-          />
+          <>
+            {showModal && (
+              <AnswerSubmitModal
+                text={isCorrect}
+                onClose={() => setShowModal(false)} // Pass a function to close the modal
+              />
+            )}
+            <div className="flex flex-row justify-center items-center">
+              <PlayRoom
+                timer={timer}
+                prob={equation}
+                sol={answer}
+                submit={handleSubmitClick}
+              />
+              <PlayerScoreBox
+                playerName1={numberOfPlayerOnline[0]}
+                score1={playerScore.playerOne}
+                playerName2={numberOfPlayerOnline[1]}
+                score2={playerScore.playerTwo}
+              />
+            </div>
+          </>
         )}
       {username == numberOfPlayerOnline[0] && !turn && (
         <StandbyRoom username={numberOfPlayerOnline[1]} timer={timer} />
@@ -233,12 +259,28 @@ export default function Page() {
         problem.data !== null &&
         equation &&
         answer && (
-          <PlayRoom
-            timer={timer}
-            prob={equation}
-            sol={answer}
-            submit={handleSubmitClick}
-          />
+          <>
+            {showModal && (
+              <AnswerSubmitModal
+                text={isCorrect}
+                onClose={() => setShowModal(false)} // Pass a function to close the modal
+              />
+            )}
+            <div className="flex flex-row justify-center items-center">
+              <PlayRoom
+                timer={timer}
+                prob={equation}
+                sol={answer}
+                submit={handleSubmitClick}
+              />
+              <PlayerScoreBox
+                playerName1={numberOfPlayerOnline[0]}
+                score1={playerScore.playerOne}
+                playerName2={numberOfPlayerOnline[1]}
+                score2={playerScore.playerTwo}
+              />
+            </div>
+          </>
         )}
       {username == numberOfPlayerOnline[1] && turn && (
         <StandbyRoom username={numberOfPlayerOnline[0]} timer={timer} />
