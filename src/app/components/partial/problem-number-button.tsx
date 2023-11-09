@@ -4,12 +4,14 @@ interface ProblemNumberButtonProps {
   onNumberClick: (text: string | boolean) => void;
   usedNumber: Set<string>;
   usage: (string | boolean)[];
+  text: string;
 }
 
 export default function ProblemNumberButton({
   onNumberClick,
   usedNumber,
   usage,
+  text,
 }: ProblemNumberButtonProps): JSX.Element {
   // const [isUse, setIsUse] = useState(false);
 
@@ -33,7 +35,7 @@ export default function ProblemNumberButton({
       }  hover:transform hover:-translate-y-1 hover:shadow-md text-white text-5xl font-semibold rounded-md`}
       onClick={handleButtonClick}
     >
-      {usage[0]}
+      {text}
     </button>
   );
 }

@@ -120,29 +120,34 @@ export default function GamePlayBox({
             onNumberClick={handleNumberClick}
             usedNumber={usedNumbers}
             usage={number1}
+            text={prob[0].toString()}
           />
           <ProblemNumberButton
             onNumberClick={handleNumberClick}
             usedNumber={usedNumbers}
             usage={number2}
+            text={prob[1].toString()}
           />
 
           <ProblemNumberButton
             onNumberClick={handleNumberClick}
             usedNumber={usedNumbers}
             usage={number3}
+            text={prob[2].toString()}
           />
 
           <ProblemNumberButton
             onNumberClick={handleNumberClick}
             usedNumber={usedNumbers}
             usage={number4}
+            text={prob[3].toString()}
           />
 
           <ProblemNumberButton
             onNumberClick={handleNumberClick}
             usedNumber={usedNumbers}
             usage={number5}
+            text={prob[4].toString()}
           />
         </div>
         <div className="flex flex-row items-center justify-between w-[600px] h-[100px]">

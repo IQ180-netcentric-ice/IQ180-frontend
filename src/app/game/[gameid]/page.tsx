@@ -27,8 +27,9 @@ export default function Page() {
 
   const [playerOneTurn, setPlayerOneTurn] = useState(false);
   const [playerTwoTurn, setPlayerTwoTurn] = useState(false);
+  const [winner, setWinner] = useState("");
 
-  const [timer, setTimer] = useState(30);
+  const [timer, setTimer] = useState(20);
   const [halfRound, setHalfRound] = useState(1);
   const [roundCount, setRoundCount] = useState(roundNo);
 
@@ -51,9 +52,10 @@ export default function Page() {
   const [equation, setEquation] = useState<number[]>();
   const [answer, setAnswer] = useState<number>();
 
-  const [problem, setProblem] = useState<{ data: number[] | null }>({
-    data: null,
-  });
+  // const [problem, setProblem] = useState<{ data: number[] | null }>({
+  //   data: null,
+  // });
+  const [problem, setProblem] = useState<number[][]>([]);
   const [solution, setSolution] = useState<number[]>([]);
 
   const [playerScore, setPlayerScore] = useState({
@@ -115,7 +117,8 @@ export default function Page() {
 
         const temporalProb = data.all_problem.map((i) => i.problem);
         const temporalSol = data.all_problem.map((i) => eval(i.solution));
-        setProblem({ data: temporalProb });
+        // setProblem({ data: temporalProb });
+        setProblem(temporalProb);
         setSolution(temporalSol);
         setEquation(temporalProb[roundNo - 1]);
         setAnswer(temporalSol[roundNo - 1]);
@@ -190,8 +193,22 @@ export default function Page() {
         //   });
         // }
 
-        setEquation(problem.data[roundCount - 2]);
+        // console.log("problem.data", problem.data[roundCount - 2]);
+        console.log("problem.data", problem[roundCount - 2]);
+        console.log("solution", solution[roundCount - 2]);
+        // setEquation(problem.data[roundCount - 2]);
+        setEquation(problem[roundCount - 2]);
         setAnswer(solution[roundCount - 2]);
+
+        if (winner == numberOfPlayerOnline[0]) {
+          console.log("1", winner);
+          setPlayerOneTurn(false);
+          setPlayerTwoTurn(true);
+        } else if (winner == numberOfPlayerOnline[1]) {
+          console.log("2", winner);
+          setPlayerOneTurn(true);
+          setPlayerTwoTurn(false);
+        }
         // setRoundScore({
         //   playerOne: { timer: 100, answer: 0 },
         //   playerTwo: { timer: 100, answer: 0 },
@@ -203,10 +220,10 @@ export default function Page() {
         setHalfRound((halfRound) => halfRound + 1);
       }
       // possible bug
-      setTimer(30);
+      setTimer(20);
 
-      setPlayerOneTurn(!playerOneTurn);
-      setPlayerTwoTurn(!playerTwoTurn);
+      setPlayerOneTurn((playerOneTurn) => !playerOneTurn);
+      setPlayerTwoTurn((playerTwoTurn) => !playerTwoTurn);
 
       // console.log("problem", problem);
       // console.log(problem.data[0]);
@@ -317,36 +334,36 @@ export default function Page() {
         player_answer: {
           player1: {
             username: numberOfPlayerOnline[0],
-            answer: 60,
-            time: 60,
-          },
-          player2: {
-            username: numberOfPlayerOnline[1],
             answer: 50,
             time: 60,
           },
-        },
-      })
-    );
-    console.log(
-      JSON.stringify({
-        type: "game_answer",
-        curr_round: roundCount,
-        problem: answer,
-        player_answer: {
-          player1: {
-            username: numberOfPlayerOnline[0],
-            answer: scoreSocket.player1.answer,
-            time: scoreSocket.player1.time,
-          },
           player2: {
             username: numberOfPlayerOnline[1],
-            answer: scoreSocket.player2.answer,
-            time: scoreSocket.player2.time,
+            answer: 60,
+            time: 60,
           },
         },
       })
     );
+    // console.log(
+    //   JSON.stringify({
+    //     type: "game_answer",
+    //     curr_round: roundCount,
+    //     problem: answer,
+    //     player_answer: {
+    //       player1: {
+    //         username: numberOfPlayerOnline[0],
+    //         answer: scoreSocket.player1.answer,
+    //         time: scoreSocket.player1.time,
+    //       },
+    //       player2: {
+    //         username: numberOfPlayerOnline[1],
+    //         answer: scoreSocket.player2.answer,
+    //         time: scoreSocket.player2.time,
+    //       },
+    //     },
+    //   })
+    // );
     console.log("send evaluate winner");
   };
 
@@ -359,12 +376,14 @@ export default function Page() {
           playerOne: playerScore.playerOne + 1,
           playerTwo: playerScore.playerTwo,
         });
+        setWinner(numberOfPlayerOnline[0]);
         console.log("player1 +1");
       } else if (data.winner == numberOfPlayerOnline[1]) {
         setPlayerScore({
           playerOne: playerScore.playerOne,
           playerTwo: playerScore.playerTwo + 1,
         });
+        setWinner(numberOfPlayerOnline[1]);
         console.log("player2 +1");
       }
     }
@@ -408,7 +427,7 @@ export default function Page() {
     <>
       {username == numberOfPlayerOnline[0] &&
         playerOneTurn &&
-        problem.data !== null &&
+        // problem.data !== null &&
         equation &&
         answer && (
           <PlayRoom
@@ -425,7 +444,7 @@ export default function Page() {
 
       {username == numberOfPlayerOnline[1] &&
         playerTwoTurn &&
-        problem.data !== null &&
+        // problem.data !== null &&
         equation &&
         answer && (
           <PlayRoom
