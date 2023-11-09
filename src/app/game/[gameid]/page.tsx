@@ -4,6 +4,8 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
 import { useImmer } from "use-immer";
+import PlayRoom from "@/app/components/multiple/play-room";
+import StandbyRoom from "@/app/components/multiple/standby-room";
 
 export default function Page() {
   const router = useRouter();
