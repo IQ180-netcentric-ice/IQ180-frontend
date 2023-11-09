@@ -2,7 +2,19 @@
 import Image from "next/image";
 import GamePlayBox from "../partial/gameplay-box";
 
-export default function PlayRoom() {
+interface GamePlayRoomProps {
+  timer: number;
+  prob: number[];
+  sol: number;
+  submit: (solution: number, userResult: number) => void;
+}
+
+export default function PlayRoom({
+  timer,
+  prob,
+  sol,
+  submit,
+}: GamePlayRoomProps) {
   return (
     <>
       <Image
@@ -11,7 +23,7 @@ export default function PlayRoom() {
         alt="background image"
         className="z-[-1]"
       />
-      <GamePlayBox goal={1} />
+      <GamePlayBox goal={sol} time={timer} prob={prob} submit={submit} />
     </>
   );
 }
