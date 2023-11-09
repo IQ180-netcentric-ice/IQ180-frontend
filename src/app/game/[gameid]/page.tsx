@@ -25,7 +25,9 @@ export default function Page() {
   const roundNo = Number(localStorage.getItem("rounds"));
   const username = localStorage.getItem("username");
 
-  const [turn, setTurn] = useState(true);
+  const [playerOneTurn, setPlayerOneTurn] = useState(false);
+  const [playerTwoTurn, setPlayerTwoTurn] = useState(false);
+
   const [timer, setTimer] = useState(30);
   const [halfRound, setHalfRound] = useState(1);
   const [roundCount, setRoundCount] = useState(roundNo);
@@ -78,6 +80,12 @@ export default function Page() {
           type: "game_problem",
         })
       );
+
+      socket.send(
+        JSON.stringify({
+          type: "First_round",
+        })
+      );
     };
 
     socket.onmessage = (event) => {
@@ -92,29 +100,38 @@ export default function Page() {
         }
       }
 
+      if (data.type === "first_round") {
+        setPlayerOneTurn(data.player_data.p1.turn);
+        setPlayerTwoTurn(data.player_data.p2.turn);
+        console.log("turn p1", data.player_data.p1.turn);
+        console.log("turn p2", data.player_data.p2.turn);
+      }
+
       // state snapshot
       if (data.type == "game_problem") {
-        setTimeout(() => {
-          const temporalProb = data.all_problem.map((i) => i.problem);
-          const temporalSol = data.all_problem.map((i) => eval(i.solution));
-          setProblem({ data: temporalProb });
-          setSolution(temporalSol);
-          setEquation(temporalProb[roundNo - 1]);
-          setAnswer(temporalSol[roundNo - 1]);
+        // setTimeout(() => {
 
-          // console.log(
-          //   "socket",
-          //   data.all_problem.map((i) => i.problem)
-          // );
-          // console.log(
-          //   "socket",
-          //   data.all_problem.map((i) => eval(i.solution))
-          // );
-          console.log(
-            "socket",
-            data.all_problem.map((i) => i.solution)
-          );
-        }, 100);
+        // }, 100);
+
+        const temporalProb = data.all_problem.map((i) => i.problem);
+        const temporalSol = data.all_problem.map((i) => eval(i.solution));
+        setProblem({ data: temporalProb });
+        setSolution(temporalSol);
+        setEquation(temporalProb[roundNo - 1]);
+        setAnswer(temporalSol[roundNo - 1]);
+
+        // console.log(
+        //   "socket",
+        //   data.all_problem.map((i) => i.problem)
+        // );
+        // console.log(
+        //   "socket",
+        //   data.all_problem.map((i) => eval(i.solution))
+        // );
+        console.log(
+          "socket",
+          data.all_problem.map((i) => i.solution)
+        );
       }
     };
   }, []);
@@ -187,7 +204,9 @@ export default function Page() {
       }
       // possible bug
       setTimer(30);
-      setTurn(!turn);
+
+      setPlayerOneTurn(!playerOneTurn);
+      setPlayerTwoTurn(!playerTwoTurn);
 
       // console.log("problem", problem);
       // console.log(problem.data[0]);
@@ -388,7 +407,7 @@ export default function Page() {
   return (
     <>
       {username == numberOfPlayerOnline[0] &&
-        turn &&
+        playerOneTurn &&
         problem.data !== null &&
         equation &&
         answer && (
@@ -400,12 +419,12 @@ export default function Page() {
             check={evaluateWinner}
           />
         )}
-      {username == numberOfPlayerOnline[0] && !turn && (
+      {username == numberOfPlayerOnline[0] && !playerOneTurn && (
         <StandbyRoom username={numberOfPlayerOnline[1]} timer={timer} />
       )}
 
       {username == numberOfPlayerOnline[1] &&
-        !turn &&
+        playerTwoTurn &&
         problem.data !== null &&
         equation &&
         answer && (
@@ -417,7 +436,7 @@ export default function Page() {
             check={evaluateWinner}
           />
         )}
-      {username == numberOfPlayerOnline[1] && turn && (
+      {username == numberOfPlayerOnline[1] && !playerTwoTurn && (
         <StandbyRoom username={numberOfPlayerOnline[0]} timer={timer} />
       )}
       {/* <div>loading</div> */}
