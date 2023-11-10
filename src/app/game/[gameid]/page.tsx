@@ -32,7 +32,7 @@ export default function Page() {
   const [playerTwoTurn, setPlayerTwoTurn] = useState(false);
   const [winner, setWinner] = useState("");
 
-  const [timer, setTimer] = useState(20);
+  const [timer, setTimer] = useState(30);
   const [halfRound, setHalfRound] = useState(1);
   const [roundCount, setRoundCount] = useState(roundNo);
   const [showModal, setShowModal] = useState(false);
@@ -67,10 +67,6 @@ export default function Page() {
     playerOne: 0,
     playerTwo: 0,
   });
-  // const [roundScore, setRoundScore] = useState({
-  //   playerOne: { timer: 100, answer: 0 },
-  //   playerTwo: { timer: 100, answer: 0 },
-  // });
 
   const socket = new WebSocket(`ws://127.0.0.1:8000/ws/game/${roomId}/`);
 
@@ -93,6 +89,9 @@ export default function Page() {
           type: "First_round",
         })
       );
+
+      localStorage.setItem("player_one_score", (0).toString());
+      localStorage.setItem("player_two_score", (0).toString());
     };
 
     socket.onmessage = (event) => {
@@ -113,16 +112,16 @@ export default function Page() {
         if (data.players.length > 2) {
           const temporalArray = data.players;
           setNumberOfPlayerOnline(temporalArray.slice(0, 2));
+          localStorage.setItem("temporal_array", temporalArray.slice(0, 2));
         } else {
           setNumberOfPlayerOnline(data.players);
+          localStorage.setItem("temporal_array", data.players);
         }
       }
 
       if (data.type === "first_round") {
         setPlayerOneTurn(data.player_data.p1.turn);
         setPlayerTwoTurn(data.player_data.p2.turn);
-        console.log("turn p1", data.player_data.p1.turn);
-        console.log("turn p2", data.player_data.p2.turn);
       }
 
       // state snapshot
@@ -152,12 +151,121 @@ export default function Page() {
           data.all_problem.map((i) => i.solution)
         );
       }
+
+      if (data.type == "winner_answer") {
+        // console.log("winer response", data);
+        // console.log(localStorage.getItem("temporal_array")?.split(","));
+        const name = localStorage.getItem("temporal_array")?.split(",");
+        if (data.winner == name[0]) {
+          // console.log(data.winner);
+          // console.log(localStorage.getItem("player_two_score"));
+
+          localStorage.setItem(
+            "player_one_score",
+            (Number(localStorage.getItem("player_one_score")) + 1).toString()
+          );
+          setPlayerScore({
+            playerOne: Number(localStorage.getItem("player_one_score")),
+            playerTwo: Number(localStorage.getItem("player_two_score")),
+          });
+          setWinner(name[0]);
+
+          console.log("1", localStorage.getItem("player_one_score"));
+          console.log(
+            "this is not answer",
+            localStorage.getItem("player_two_score")
+          );
+        } else if (data.winner == name[1]) {
+          localStorage.setItem(
+            "player_two_score",
+            (Number(localStorage.getItem("player_two_score")) + 1).toString()
+          );
+          setPlayerScore({
+            playerOne: Number(localStorage.getItem("player_one_score")),
+            playerTwo: Number(localStorage.getItem("player_two_score")),
+          });
+          setWinner(name[1]);
+
+          console.log("2", localStorage.getItem("player_two_score"));
+        }
+      }
+
+      if (data.type == "game_answer") {
+        // console.log(data.player_answer);
+        // console.log(data.player_answer.player2.answer);
+        const name = localStorage.getItem("temporal_array")?.split(",");
+        if (data.player_answer.player1.answer == "") {
+          localStorage.setItem(
+            "player_two_answer",
+            data.player_answer.player2.answer.toString()
+          );
+          localStorage.setItem(
+            "player_two_time",
+            data.player_answer.player2.time.toString()
+          );
+
+          const player_two_answer = Number(
+            localStorage.getItem("player_two_answer")
+          );
+          const player_two_time = Number(
+            localStorage.getItem("player_two_time")
+          );
+          // setScoreSocket({
+          //   player1: {
+          //     username: name[0],
+          //     answer: scoreSocket.player1.answer,
+          //     time: scoreSocket.player1.time,
+          //   },
+          //   player2: {
+          //     username: name[1],
+          //     answer: player_two_answer,
+          //     time: player_two_time,
+          //   },
+          // });
+
+          console.log("receive 2", localStorage.getItem("player_two_answer"));
+          console.log("receive 2", localStorage.getItem("player_two_time"));
+        } else if (data.player_answer.player2.answer == "") {
+          localStorage.setItem(
+            "player_one_answer",
+            data.player_answer.player1.answer.toString()
+          );
+          localStorage.setItem(
+            "player_one_time",
+            data.player_answer.player1.time.toString()
+          );
+
+          const player_one_answer = Number(
+            localStorage.getItem("player_one_answer")
+          );
+          const player_one_time = Number(
+            localStorage.getItem("player_one_time")
+          );
+          // setScoreSocket({
+          //   player1: {
+          //     username: name[0],
+          //     answer: player_one_answer,
+          //     time: player_one_time,
+          //   },
+          //   player2: {
+          //     username: name[1],
+          //     answer: scoreSocket.player2.answer,
+          //     time: scoreSocket.player2.time,
+          //   },
+          // });
+
+          console.log("receive 1", localStorage.getItem("player_one_answer"));
+          console.log("receive 1", localStorage.getItem("player_one_time"));
+        }
+      }
+    };
+    return () => {
+      socket.onopen = undefined;
     };
   }, []);
 
   useEffect(() => {
     const interval = setInterval(() => {
-      //possible bug
       setTimer((timer) => timer - 1);
     }, 1000);
 
@@ -226,10 +334,7 @@ export default function Page() {
           setPlayerOneTurn(true);
           setPlayerTwoTurn(false);
         }
-        // setRoundScore({
-        //   playerOne: { timer: 100, answer: 0 },
-        //   playerTwo: { timer: 100, answer: 0 },
-        // });
+
         console.log("equa", equation);
         console.log("ans", answer);
         console.log("player score", playerScore);
@@ -237,7 +342,7 @@ export default function Page() {
         setHalfRound((halfRound) => halfRound + 1);
       }
       // possible bug
-      setTimer(20);
+      setTimer(30);
 
       setPlayerOneTurn((playerOneTurn) => !playerOneTurn);
       setPlayerTwoTurn((playerTwoTurn) => !playerTwoTurn);
@@ -283,7 +388,7 @@ export default function Page() {
               player1: {
                 username: numberOfPlayerOnline[0],
                 answer: userResult,
-                time: 60 - timer,
+                time: 30 - timer,
               },
               player2: {
                 username: numberOfPlayerOnline[1],
@@ -314,7 +419,7 @@ export default function Page() {
               player2: {
                 username: numberOfPlayerOnline[1],
                 answer: userResult,
-                time: 60 - timer,
+                time: 30 - timer,
               },
             },
           })
@@ -357,21 +462,61 @@ export default function Page() {
       JSON.stringify({
         type: "game_answer",
         curr_round: roundCount,
-        problem: 60,
+        problem: answer,
         player_answer: {
           player1: {
             username: numberOfPlayerOnline[0],
-            answer: 50,
-            time: 60,
+            answer: Number(localStorage.getItem("player_one_answer")),
+            time: Number(localStorage.getItem("player_one_time")),
           },
           player2: {
             username: numberOfPlayerOnline[1],
-            answer: 60,
-            time: 60,
+            answer: Number(localStorage.getItem("player_two_answer")),
+            time: Number(localStorage.getItem("player_two_time")),
           },
         },
       })
     );
+
+    // socket.send(
+    //   JSON.stringify({
+    //     type: "game_answer",
+    //     curr_round: roundCount,
+    //     problem: 60,
+    //     player_answer: {
+    //       player1: {
+    //         username: numberOfPlayerOnline[0],
+    //         answer: 50,
+    //         time: 50,
+    //       },
+    //       player2: {
+    //         username: numberOfPlayerOnline[1],
+    //         answer: 60,
+    //         time: 50,
+    //       },
+    //     },
+    //   })
+    // );
+    console.log(
+      JSON.stringify({
+        type: "game_answer",
+        curr_round: roundCount,
+        problem: answer,
+        player_answer: {
+          player1: {
+            username: numberOfPlayerOnline[0],
+            answer: Number(localStorage.getItem("player_one_answer")),
+            time: Number(localStorage.getItem("player_one_time")),
+          },
+          player2: {
+            username: numberOfPlayerOnline[1],
+            answer: Number(localStorage.getItem("player_two_answer")),
+            time: Number(localStorage.getItem("player_two_time")),
+          },
+        },
+      })
+    );
+
     // console.log(
     //   JSON.stringify({
     //     type: "game_answer",
@@ -391,64 +536,63 @@ export default function Page() {
     //     },
     //   })
     // );
-    console.log("send evaluate winner");
   };
 
-  socket.onmessage = (event) => {
-    const data = JSON.parse(event.data);
-    if (data.type == "winner_answer") {
-      console.log("data_winer");
-      if (data.winner == numberOfPlayerOnline[0]) {
-        setPlayerScore({
-          playerOne: playerScore.playerOne + 1,
-          playerTwo: playerScore.playerTwo,
-        });
-        setWinner(numberOfPlayerOnline[0]);
-        console.log("player1 +1");
-      } else if (data.winner == numberOfPlayerOnline[1]) {
-        setPlayerScore({
-          playerOne: playerScore.playerOne,
-          playerTwo: playerScore.playerTwo + 1,
-        });
-        setWinner(numberOfPlayerOnline[1]);
-        console.log("player2 +1");
-      }
-    }
+  // socket.onmessage = (event) => {
+  //   const data = JSON.parse(event.data);
+  //   if (data.type == "winner_answer") {
+  //     console.log("data_winer");
+  //     if (data.winner == numberOfPlayerOnline[0]) {
+  //       setPlayerScore({
+  //         playerOne: playerScore.playerOne + 1,
+  //         playerTwo: playerScore.playerTwo,
+  //       });
+  //       setWinner(numberOfPlayerOnline[0]);
+  //       console.log("player1 +1");
+  //     } else if (data.winner == numberOfPlayerOnline[1]) {
+  //       setPlayerScore({
+  //         playerOne: playerScore.playerOne,
+  //         playerTwo: playerScore.playerTwo + 1,
+  //       });
+  //       setWinner(numberOfPlayerOnline[1]);
+  //       console.log("player2 +1");
+  //     }
+  //   }
 
-    if (data.type == "game_answer") {
-      // console.log(data.player_answer);
-      // console.log(data.player_answer.player2.answer);
-      if (data.player_answer.player1.answer == "") {
-        setScoreSocket({
-          player1: {
-            username: numberOfPlayerOnline[0],
-            answer: scoreSocket.player1.answer,
-            time: scoreSocket.player1.time,
-          },
-          player2: {
-            username: numberOfPlayerOnline[1],
-            answer: data.player_answer.player2.answer,
-            time: data.player_answer.player2.time,
-          },
-        });
-        console.log("receive 2");
-      } else if (data.player_answer.player2.answer == "") {
-        setScoreSocket({
-          player1: {
-            username: numberOfPlayerOnline[0],
-            answer: data.player_answer.player1.answer,
-            time: data.player_answer.player1.time,
-          },
-          player2: {
-            username: numberOfPlayerOnline[1],
-            answer: scoreSocket.player2.answer,
-            time: scoreSocket.player2.time,
-          },
-        });
-        console.log("receive 1");
-      }
-    }
-  };
+  //   if (data.type == "game_answer") {
+  //     // console.log(data.player_answer);
+  //     // console.log(data.player_answer.player2.answer);
+  //     if (data.player_answer.player1.answer == "") {
+  //       setScoreSocket({
+  //         player1: {
+  //           username: numberOfPlayerOnline[0],
+  //           answer: scoreSocket.player1.answer,
+  //           time: scoreSocket.player1.time,
+  //         },
+  //         player2: {
+  //           username: numberOfPlayerOnline[1],
+  //           answer: data.player_answer.player2.answer,
+  //           time: data.player_answer.player2.time,
+  //         },
+  //       });
+  //       console.log("receive 2");
+  //     } else if (data.player_answer.player2.answer == "") {
+  //       setScoreSocket({
+  //         player1: {
+  //           username: numberOfPlayerOnline[0],
+  //           answer: data.player_answer.player1.answer,
+  //           time: data.player_answer.player1.time,
+  //         },
+  //         player2: {
+  //           username: numberOfPlayerOnline[1],
+  //           answer: scoreSocket.player2.answer,
+  //           time: scoreSocket.player2.time,
+  //         },
+  //       });
+  //       console.log("receive 1");
+  //     }
+  //   }
+  // };
 
   return (
     <>
