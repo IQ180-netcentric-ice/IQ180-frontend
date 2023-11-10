@@ -44,7 +44,7 @@ export default function StandbyBox({
           className="border-solid border-gray-500 m-[25px]"
         />
         <label className="text-2xl text-black font-bold">Waiting for</label>
-        <label className="text-2xl text-blue-700 font-bold">Player2!</label>
+        <label className="text-2xl text-blue-700 font-bold">{user}</label>
         <div className="m-[10px] flex p-1 w-[750px] h-[250px] rounded-lg justify-center">
           <label className="text-black text-xl">{randomTip}</label>
         </div>

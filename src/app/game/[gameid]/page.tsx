@@ -238,7 +238,12 @@ export default function Page() {
 
     if (roundCount === 0) {
       socket.close();
-      router.push(`/`);
+      if (playerScore.playerOne > playerScore.playerTwo) {
+        localStorage.setItem("winner", numberOfPlayerOnline[0]);
+      } else {
+        localStorage.setItem("winner", numberOfPlayerOnline[1]);
+      }
+      router.push(`/round-annoucement`);
     }
 
     return () => {
