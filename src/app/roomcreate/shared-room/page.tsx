@@ -78,11 +78,13 @@ export default function Page() {
     const data = JSON.parse(event.data);
     if (data.player_status.p1 === true && data.player_status.p2 === false) {
       setplayerOneReady(data.player_status.p1);
+      console.log("ready one");
     } else if (
       data.player_status.p1 === false &&
       data.player_status.p2 === true
     ) {
       setplayerTwoReady(data.player_status.p2);
+      console.log("ready two");
     }
   };
 
