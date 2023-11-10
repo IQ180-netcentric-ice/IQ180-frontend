@@ -98,6 +98,17 @@ export default function Page() {
     socket.onmessage = (event) => {
       const data = JSON.parse(event.data);
 
+      if (data.type === "first_round") {
+        if (data.player_data?.p1 && data.player_data?.p2) {
+          setPlayerOneTurn(data.player_data.p1.turn);
+          setPlayerTwoTurn(data.player_data.p2.turn);
+          console.log("turn p1", data.player_data.p1.turn);
+          console.log("turn p2", data.player_data.p2.turn);
+        } else {
+          // Handle the case where p1 or p2 is not defined in the data
+        }
+      }
+
       if (data.type === "player_status") {
         if (data.players.length > 2) {
           const temporalArray = data.players;

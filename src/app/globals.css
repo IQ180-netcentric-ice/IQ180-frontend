@@ -32,3 +32,8 @@ body {
 .rotate-y-0 {
   transform: rotateY(0deg);
 }
+
+/* styles/customCursor.css */
+.custom-cursor {
+  cursor: url("/images/Yellow star.svg"), auto;
+}
