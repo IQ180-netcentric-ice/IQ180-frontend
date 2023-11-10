@@ -32,7 +32,7 @@ export default function Page() {
   const [playerTwoTurn, setPlayerTwoTurn] = useState(false);
   const [winner, setWinner] = useState("");
 
-  const [timer, setTimer] = useState(30);
+  const [timer, setTimer] = useState(60);
   const [halfRound, setHalfRound] = useState(1);
   const [roundCount, setRoundCount] = useState(roundNo);
   const [showModal, setShowModal] = useState(false);
@@ -97,16 +97,16 @@ export default function Page() {
     socket.onmessage = (event) => {
       const data = JSON.parse(event.data);
 
-      if (data.type === "first_round") {
-        if (data.player_data?.p1 && data.player_data?.p2) {
-          setPlayerOneTurn(data.player_data.p1.turn);
-          setPlayerTwoTurn(data.player_data.p2.turn);
-          console.log("turn p1", data.player_data.p1.turn);
-          console.log("turn p2", data.player_data.p2.turn);
-        } else {
-          // Handle the case where p1 or p2 is not defined in the data
-        }
-      }
+      // if (data.type === "first_round") {
+      //   if (data.player_data?.p1 && data.player_data?.p2) {
+      //     setPlayerOneTurn(data.player_data.p1.turn);
+      //     setPlayerTwoTurn(data.player_data.p2.turn);
+      //     console.log("turn p1", data.player_data.p1.turn);
+      //     console.log("turn p2", data.player_data.p2.turn);
+      //   } else {
+      //     // Handle the case where p1 or p2 is not defined in the data
+      //   }
+      // }
 
       if (data.type === "player_status") {
         if (data.players.length > 2) {
@@ -259,9 +259,9 @@ export default function Page() {
         }
       }
     };
-    return () => {
-      socket.onopen = undefined;
-    };
+    // return () => {
+    //   socket.onopen = undefined;
+    // };
   }, []);
 
   useEffect(() => {
@@ -342,7 +342,7 @@ export default function Page() {
         setHalfRound((halfRound) => halfRound + 1);
       }
       // possible bug
-      setTimer(30);
+      setTimer(60);
 
       setPlayerOneTurn((playerOneTurn) => !playerOneTurn);
       setPlayerTwoTurn((playerTwoTurn) => !playerTwoTurn);
@@ -388,7 +388,7 @@ export default function Page() {
               player1: {
                 username: numberOfPlayerOnline[0],
                 answer: userResult,
-                time: 30 - timer,
+                time: 60 - timer,
               },
               player2: {
                 username: numberOfPlayerOnline[1],
@@ -419,7 +419,7 @@ export default function Page() {
               player2: {
                 username: numberOfPlayerOnline[1],
                 answer: userResult,
-                time: 30 - timer,
+                time: 60 - timer,
               },
             },
           })
