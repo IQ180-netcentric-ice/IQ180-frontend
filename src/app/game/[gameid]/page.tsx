@@ -243,9 +243,9 @@ export default function Page() {
         }
       }
     };
-    return () => {
-      socket.onopen = undefined;
-    };
+    // return () => {
+    //   socket.onopen = undefined;
+    // };
   }, []);
 
   useEffect(() => {
